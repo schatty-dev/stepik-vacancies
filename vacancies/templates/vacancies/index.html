@@ -30,168 +30,35 @@
     <section class="mt-5 pt-3">
       <h2 class="h2 font-weight-normal text-center mb-5">Вакансии по рубрикам</h2>
       <div class="row mb-0">
+        {% for spec_name, spec_num in specialties.items %}
         <div class="col-6 col-md-6 col-lg-3">
           <div class="card pt-4 text-center mb-4">
             <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
             <div class="card-body">
-              <p class="card-text mb-2">Фронтенд</p>
-              <p class="card-text"><a href="#">5 вакансий</a></p>
+              <p class="card-text mb-2">{{ spec_name }}</p>
+              <p class="card-text"><a href="#">{{ spec_num }} vacancies</a></p>
             </div>
           </div>
         </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Бэкенд</p>
-              <p class="card-text"><a href="#">3 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Геймдев</p>
-              <p class="card-text"><a href="#">5 вакансий</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Девопс</p>
-              <p class="card-text"><a href="#">7 вакансий</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-4">
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Дизайн</p>
-              <p class="card-text"><a href="#">2 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Бэкенд</p>
-              <p class="card-text"><a href="#">1 вакансия</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Менеджмент</p>
-              <p class="card-text"><a href="#">3 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
-            <div class="card-body">
-              <p class="card-text mb-2">Тестирование</p>
-              <p class="card-text"><a href="#">5 вакансий</a></p>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </section>
 
     <section class="my-5 pt-3">
       <h2 class="h2 font-weight-normal text-center mb-5">Нам доверяют лучшие компании</h2>
       <div class="row mb-0">
+        {% for comp_logo, vac_num in companies.items %}
         <div class="col-6 col-md-6 col-lg-3">
           <div class="card pt-4 text-center mb-4">
             <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="../static/logo2.png" alt="">
+              <img class="mx-auto d-block mw-100" src="{{ comp_logo }}" alt="">
             </a>
             <div class="card-body">
-              <p class="card-text"><a href="#">5 вакансий</a></p>
+              <p class="card-text"><a href="#">{{ vac_num }} vacancies</a></p>
             </div>
           </div>
         </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="../static/logo3.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">3 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="../static/logo4.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">5 вакансий</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-4 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="../static/logo5.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">7 вакансий</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-4">
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-5 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="../static/logo6.png" width="150" height="80" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">2 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-5 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block m-100" src="../static/logo7.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">1 вакансия</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-5 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block m-100" src="../static/logo8.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">3 вакансии</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-6 col-lg-3">
-          <div class="card pt-5 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block" src="../static/logo1.png" width="150" alt="">
-            </a>
-            <div class="card-body">
-              <p class="card-text"><a href="#">5 вакансий</a></p>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </section>
   </main>
