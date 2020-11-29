@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 from collections import Counter
+import warnings
 
 from django.http import Http404, HttpResponse
 from django.views.generic.base import TemplateView
@@ -24,9 +25,11 @@ def get_vacancy_preview_info(vac_objs: Sequence,
 
     specs_info = []
     for spec_code, spec_num in specs_cnt.items():
-        # Assume the object exists (!)
-        name = spec_objs.get(code=spec_code).title
-        specs_info.append({'code': spec_code, 'name': name, "num": spec_num})
+        try:
+            name = spec_objs.get(code=spec_code)
+            specs_info.append({'code': spec_code, 'name': name.title, "num": spec_num})
+        except Exception as e:
+            warnings.warn(f"Couldn't count positions for {spec_code}: {e}")
 
     return {"specialties": specs_info}
 
