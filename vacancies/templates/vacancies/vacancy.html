@@ -12,12 +12,12 @@
       </div>
       <div class="col-12 col-lg-8">
         <section class="pl-3">
-          <a href="#"><img src="{{ company_logo }}" width="150" height="70" alt=""></a>
+          <a href="/company/{{object.company.name}}"><img src="{{ object.company.logo }}" width="150" height="70" alt=""></a>
           <div class="d-flex align-items-baseline align-content-baseline">
-            <h1 class="h2 mt-4 font-weight-bold" >{{ title }}</h1>
-            <p class="m-0 pl-3">$ {{ salary_min }} – {{ salary_max }} rub.</p>
+            <h1 class="h2 mt-4 font-weight-bold" >{{ object.title }}</h1>
+            <p class="m-0 pl-3">$ {{ object.salary_min }} – {{ object.salary_max }} rub.</p>
           </div>
-          <p class="mt-2"><b>{{ specialty }}</b> • {{ skills }} </p>
+          <p class="mt-2"><b>{{ object.specialty.title }}</b> • {{ object.skills }} </p>
           <p class="text-muted mb-4">{{ company_name }}</p>
           <div style="line-height: 1.8;">
             {{ text|safe }}
