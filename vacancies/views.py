@@ -1,9 +1,10 @@
 from collections import Counter
-from django.shortcuts import render
-from django.http import Http404
+
+from django.http import Http404, HttpResponse
+from django.views.generic.base import TemplateView
+from django.views.generic import DetailView
 
 from vacancies.models import Company, Vacancy, Speciality
-
 from data import WEBSITE_TITLE
 
 
@@ -66,71 +67,93 @@ def get_all_vacancies_info():
     return {"vacancies": info, "total": len(info)}
 
 
-def main_view(request):
-    context_data = {**get_base_context(),
-                    **get_company_preview_info(),
-                    **get_vacancy_preview_info()}
-    return render(request, "vacancies/index.html", context=context_data)
-
-
 ''' ------ Views ------- '''
 
 
-def company_view(request, company):
-    """View for 'Company' page. """
-    context_data = {**get_base_context(),
-                    **get_all_vacancies_info()}
-
-    company = Company.objects.get(name=company)
-    if company is None:
-        raise Http404("404: Company doesn't exist.")
-
-    company_info = {
-            "name": company.name,
-            "location": company.location,
-            "logo": company.logo
-    }
-    context_data.update(company_info)
-
-    vacancy_info = [get_vacancy_info(vac)
-                    for vac in Vacancy.objects.filter(company=company)]
-    context_data.update({"vacancies": vacancy_info, "total": len(vacancy_info)})
-
-    return render(request, "vacancies/company.html", context=context_data)
+class BaseView(TemplateView):
+    def get_context_data(self, **kwargs):
+        return get_base_context()
 
 
-def vacancies(request):
-    """View for 'All Positions' page. """
-    context_data = {**get_base_context(),
-                    **get_all_vacancies_info()}
-    return render(request, "vacancies/vacancies.html", context=context_data)
+class BaseDetailView(DetailView):
+    """A base view for a single object + base context. """
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update(get_base_context())
+        return self.render_to_response(context)
 
 
-def vacancy_category(request, category):
+class MainView(BaseView):
+    template_name = "vacancies/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(MainView, self).get_context_data(**kwargs)
+        context.update(get_company_preview_info())
+        context.update(get_vacancy_preview_info())
+        return context
+
+
+class CompanyView(BaseView):
+    template_name = "vacancies/company.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyView, self).get_context_data(**kwargs)
+        try:
+            company = kwargs.get("company")
+            company = Company.objects.get(name=company)
+            if company is None:
+                raise Http404("404: Company doesn't exist.")
+        except Exception as e:
+            raise HttpResponse(e, status=500)
+
+        company_info = {
+                "name": company.name,
+                "location": company.location,
+                "logo": company.logo
+        }
+        context.update(company_info)
+
+        vacancies = Vacancy.objects.filter(company=company)
+        context.update({"vacancies": vacancies, "total": len(vacancies)})
+
+        return context
+
+
+class AllPositionsView(BaseView):
+    template_name = "vacancies/vacancies.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AllPositionsView, self).get_context_data(**kwargs)
+        context['vacancies'] = Vacancy.objects.all()
+        context['title'] = "All Positions"
+        return context
+
+
+class SpecialtyPositionsView(BaseView):
     """View for 'Positions for Category' """
-    context_data = get_base_context()
+    template_name = "vacancies/vacancies.html"
 
-    speciality = Speciality.objects.get(code=category)
-    if speciality is None:
-        raise Http404("404: Category doesn't exist.")
+    def get_context_data(self, **kwargs):
+        context = super(SpecialtyPositionsView, self).get_context_data(**kwargs)
 
-    vacancy_info = [get_vacancy_info(vac) for vac in Vacancy.objects.filter(specialty=speciality)]
-    context_data.update({
-        "vacancies": vacancy_info,
-        "spec": speciality.title,
-        "total": len(vacancy_info)})
+        try:
+            specialty = kwargs.get("specialty")
+            spec_obj = Speciality.objects.get(code=specialty)
+            if spec_obj is None:
+                raise Http404("404: Category doesn't exist.")
+        except Exception as e:
+            raise HttpResponse(e, status=500)
 
-    return render(request, "vacancies/vacancy_category.html", context=context_data)
+        context.update({
+            "vacancies": Vacancy.objects.filter(specialty=spec_obj),
+            "title": spec_obj.title,
+        })
+        return context
 
 
-def vacancy_view(request, id):
+class PositionView(BaseDetailView):
     """View for 'Single Position' page. """
-    context_data = get_base_context()
 
-    vacancy = Vacancy.objects.get(pk=id)
-    if vacancy is None:
-        raise Http404("404: Position doesn't exist.")
-
-    context_data.update(get_vacancy_info(vacancy))
-
-    return render(request, "vacancies/vacancy.html", context=context_data)
+    template_name = "vacancies/vacancy.html"
+    model = Vacancy

@@ -7,12 +7,12 @@
               <div class="row">
                 <div class="col-12 col-md-8 col-lg-9">
                   <h2 class="h2 pb-2"><a href="/vacancy/{{ vac.id }}"/> {{ vac.title }}</a></h2>
-                  <p class="mb-2"><b>{{ vac.specialty }} </b>{{ vac.skills }}</p>
+                  <p class="mb-2"><b>{{ vac.specialty.title }} </b>{{ vac.skills }}</p>
                   <p>$ {{ vac.salary_min }} ... {{ vac.salary_max }} rub.</p>
                   <p class="text-muted pt-1">{{ vac.date }}</p>
                 </div>
                 <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                  <a href="/company/{{ vac.company_name }}"><img src="{{ vac.company_logo }}" width="150" height="70" alt=""></a>
+                  <a href="/company/{{ vac.company.name }}"><img src="{{ vac.company.logo }}" width="150" height="70" alt=""></a>
                 </div>
               </div>
             </div>
