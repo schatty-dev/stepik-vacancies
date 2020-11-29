@@ -84,22 +84,18 @@ class CompanyView(BaseView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
         try:
-            company = kwargs.get("company")
-            company = Company.objects.get(name=company)
+            company = Company.objects.get(name=kwargs.get("company"))
             if company is None:
                 raise Http404("404: Company doesn't exist.")
         except Exception as e:
             raise HttpResponse(e, status=500)
 
-        company_info = {
+        context.update({
                 "name": company.name,
                 "location": company.location,
                 "logo": company.logo
-        }
-        context.update(company_info)
-
-        vacancies = Vacancy.objects.filter(company=company)
-        context.update({"vacancies": vacancies, "total": len(vacancies)})
+        })
+        context["vacancies"] = Vacancy.objects.filter(company=company)
 
         return context
 

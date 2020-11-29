@@ -20,7 +20,7 @@
           <p class="mt-2"><b>{{ object.specialty.title }}</b> • {{ object.skills }} </p>
           <p class="text-muted mb-4">{{ company_name }}</p>
           <div style="line-height: 1.8;">
-            {{ text|safe }}
+            {{ object.text|safe }}
           </div>
           <form action="/echo" class="card mt-4 mb-3" enctype="multipart/form-data">
             <div class="card-body mx-3">

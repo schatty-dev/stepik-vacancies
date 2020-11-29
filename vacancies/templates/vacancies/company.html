@@ -11,7 +11,7 @@
         <img src="{{ logo }}" width="160" height="70" alt="">
       </div>
       <h1 class="h1 text-center mx-auto mt-0 pt-1" style="font-size: 70px;"><strong>{{ name }}</strong></h1>
-      <p class="text-center pt-1">{{ location }}, {{ total }} positions</p>
+      <p class="text-center pt-1">{{ location }}, {{ vacancies|length }} positions</p>
       {% include 'vacancies/positions_list.html' %}
     </section>
   </main>
