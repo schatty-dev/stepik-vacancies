@@ -15,26 +15,26 @@ def get_base_context():
     }
 
 
-def get_vacancy_preview_info():
+def get_vacancy_preview_info(vac_objs, spec_objs):
     """Get info for previewing positions per specialty for main page. """
-    specs = [vac.specialty.code for vac in Vacancy.objects.all()]
+    specs = [vac.specialty.code for vac in vac_objs]
     specs_cnt = dict(Counter(specs))
 
     specs_info = []
     for spec_code, spec_num in specs_cnt.items():
         # Assume the object exists (!)
-        name = Speciality.objects.get(code=spec_code).title
+        name = spec_objs.get(code=spec_code).title
         specs_info.append({'code': spec_code, 'name': name, "num": spec_num})
 
     return {"specialties": specs_info}
 
 
-def get_company_preview_info():
+def get_company_preview_info(vac_objs, comp_objs):
     """Get info for previewing positions per company for main page. """
-    companies = [vac.company.name for vac in Vacancy.objects.all()]
+    companies = [vac.company.name for vac in vac_objs]
     company_cnt = Counter(companies)
     company_info = []
-    for company in Company.objects.all():
+    for company in comp_objs:
         num = company_cnt[company.name]
         if not num:
             continue
@@ -68,8 +68,13 @@ class MainView(BaseView):
 
     def get_context_data(self, **kwargs):
         context = super(MainView, self).get_context_data(**kwargs)
-        context.update(get_company_preview_info())
-        context.update(get_vacancy_preview_info())
+
+        vacancies = Vacancy.objects.all()
+        companies = Company.objects.all()
+        specialities = Speciality.objects.all()
+
+        context.update(get_company_preview_info(vacancies, companies))
+        context.update(get_vacancy_preview_info(vacancies, specialities))
         return context
 
 
