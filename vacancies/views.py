@@ -42,16 +42,22 @@ def get_company_preview_info():
     return {"companies": company_info}
 
 
+def get_vacancy_info(vac_obj):
+    return {
+            "id": vac_obj.id,
+            "title": vac_obj.title,
+            "specialty": vac_obj.specialty.title,
+            "skills": vac_obj.skills,
+            "salary_min": vac_obj.salary_min,
+            "salary_max": vac_obj.salary_max,
+            "date": vac_obj.published_at,
+            "company_logo": vac_obj.company.logo,
+            "company_name": vac_obj.company.name
+    }
+
+
 def get_all_vacancies_info():
-    info = [{
-            "id": vac.id,
-            "title": vac.title,
-            "specialty": vac.specialty.title,
-            "skills": vac.skills,
-            "salary_min": vac.salary_min,
-            "salary_max": vac.salary_max,
-            "date": vac.published_at,
-            "company_logo": vac.company.logo} for vac in Vacancy.objects.all()]
+    info = [get_vacancy_info(vac) for vac in Vacancy.objects.all()]
     return {"vacancies": info, "total": len(info)}
 
 
@@ -66,7 +72,6 @@ def company_view(request, company):
     context_data = {**get_base_context(),
                     **get_all_vacancies_info()}
 
-    print("Company: ", company)
     company = Company.objects.get(name=company)
     if company is None:
         raise Http404("404: Company doesn't exist.")
@@ -75,19 +80,11 @@ def company_view(request, company):
             "location": company.location,
             "logo": company.logo
     }
+    print("Info: ", company_info)
     context_data.update(company_info)
 
-    vacancy_info = []
-    for vac in Vacancy.objects.filter(company=company):
-            vacancy_info.append({
-                "id": vac.id,
-                "title": vac.title,
-                "specialty": vac.specialty.title,
-                "skills": vac.skills,
-                "salary_min": vac.salary_min,
-                "salary_max": vac.salary_max,
-                "date": vac.published_at,
-                "company_logo": vac.company.logo})
+    vacancy_info = [get_vacancy_info(vac)
+                    for vac in Vacancy.objects.filter(company=company)]
     context_data.update({"vacancies": vacancy_info, "total": len(vacancy_info)})
 
     return render(request, "vacancies/company.html", context=context_data)
@@ -105,22 +102,12 @@ def vacancy_category(request, category):
     speciality = Speciality.objects.get(code=category)
     if speciality is None:
         raise Http404("404: Category doesn't exist.")
-  
-    vacancy_info = []
-    for vac in Vacancy.objects.all():
-        if vac.specialty == speciality:
-            vacancy_info.append({
-                "id": vac.id,
-                "title": vac.title,
-                "specialty": vac.specialty.title,
-                "skills": vac.skills,
-                "salary_min": vac.salary_min,
-                "salary_max": vac.salary_max,
-                "date": vac.published_at,
-                "company_logo": vac.company.logo}
-            )
 
-    context_data.update({"vacancies": vacancy_info, "spec": speciality.title, "total": len(vacancy_info)})
+    vacancy_info = [get_vacancy_info(vac) for vac in Vacancy.objects.filter(specialty=speciality)]
+    context_data.update({
+        "vacancies": vacancy_info,
+        "spec": speciality.title,
+        "total": len(vacancy_info)})
 
     return render(request, "vacancies/vacancy_category.html", context=context_data)
 
@@ -132,16 +119,6 @@ def vacancy_view(request, id):
     if vacancy is None:
         raise Http404("404: Position doesn't exist.")
     
-    vacancy_info = {
-            "title": vacancy.title,
-            "spec": vacancy.specialty.title,
-            "salary_min": vacancy.salary_min,
-            "salary_max": vacancy.salary_max,
-            "skills": vacancy.skills,
-            "text": vacancy.text,
-            "company_name": vacancy.company.name,
-            "company_logo": vacancy.company.logo,
-    }
-    context_data.update(vacancy_info)
+    context_data.update(get_vacancy_info(vacancy))
 
     return render(request, "vacancies/vacancy.html", context=context_data)
