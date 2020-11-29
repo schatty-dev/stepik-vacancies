@@ -13,7 +13,7 @@
             <div class="card-body px-4">
               <div class="row">
                 <div class="col-12 col-md-8 col-lg-9">
-                  <h2 class="h2 pb-2">{{ vac.title }}</h2>
+                  <h2 class="h2 pb-2"><a href="/vacancy/{{ vac.id }}"/> {{ vac.title }}</a></h2>
                   <p class="mb-2"><b>{{ vac.specialty }} </b>{{ vac.skills }}</p>
                   <p>$ {{ vac.salary_min }} ... {{ vac.salary_max }} rub.</p>
                   <p class="text-muted pt-1">{{ vac.date }}</p>
