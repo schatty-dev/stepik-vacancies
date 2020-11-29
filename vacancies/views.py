@@ -79,4 +79,22 @@ def vacancy_category(request, category):
 
 def vacancy_view(request, id):
     context_data = {}
+
+    vacancy = Vacancy.objects.get(pk=id)
+    if vacancy is None:
+        print("Vacancy is None")
+        raise Http404("404: Position doesn't exist.")
+    
+    vacancy_info = {
+            "title": vacancy.title,
+            "spec": vacancy.specialty.title,
+            "salary_min": vacancy.salary_min,
+            "salary_max": vacancy.salary_max,
+            "skills": vacancy.skills,
+            "text": vacancy.text,
+            "company_name": vacancy.company.name,
+            "company_logo": vacancy.company.logo,
+    }
+    context_data.update(vacancy_info)
+
     return render(request, "vacancies/vacancy.html", context=context_data)
