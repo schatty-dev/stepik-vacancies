@@ -30,13 +30,13 @@
     <section class="mt-5 pt-3">
       <h2 class="h2 font-weight-normal text-center mb-5">Вакансии по рубрикам</h2>
       <div class="row mb-0">
-        {% for spec_name, spec_num in specialties.items %}
+        {% for spec in specialties %}
         <div class="col-6 col-md-6 col-lg-3">
           <div class="card pt-4 text-center mb-4">
             <img class="mx-auto d-block" src="https://place-hold.it/80x80" width="80" height="80" alt="">
             <div class="card-body">
-              <p class="card-text mb-2">{{ spec_name }}</p>
-              <p class="card-text"><a href="#">{{ spec_num }} vacancies</a></p>
+              <p class="card-text mb-2">{{ spec.name }}</p>
+              <p class="card-text"><a href="/vacancy/cat/{{ spec.code }}">{{ spec.num }} vacancies</a></p>
             </div>
           </div>
         </div>
@@ -47,14 +47,14 @@
     <section class="my-5 pt-3">
       <h2 class="h2 font-weight-normal text-center mb-5">Нам доверяют лучшие компании</h2>
       <div class="row mb-0">
-        {% for comp_logo, vac_num in companies.items %}
+        {% for company in companies %}
         <div class="col-6 col-md-6 col-lg-3">
           <div class="card pt-4 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-              <img class="mx-auto d-block mw-100" src="{{ comp_logo }}" alt="">
+            <a href="/company/{{ company.name }}/" style="max-width: 150px;" class="mx-auto d-block">
+              <img class="mx-auto d-block mw-100" src="{{ company.logo }}/80x30" alt="">
             </a>
             <div class="card-body">
-              <p class="card-text"><a href="#">{{ vac_num }} vacancies</a></p>
+              <p class="card-text"><a href="/company/{{company.name}}/">{{ company.num }} vacancies</a></p>
             </div>
           </div>
         </div>

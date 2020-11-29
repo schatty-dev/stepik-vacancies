@@ -14,20 +14,32 @@ def get_base_context():
 
 
 def get_vacancy_preview_info():
-    specs = [vac.specialty.title for vac in Vacancy.objects.all()]
+    specs = [vac.specialty.code for vac in Vacancy.objects.all()]
     specs_cnt = dict(Counter(specs))
-    return {"specialties": specs_cnt}
+
+    specs_info = []
+    for spec_code, spec_num in specs_cnt.items():
+        # Assume the object exists (!)
+        name = Speciality.objects.get(code=spec_code).title
+        specs_info.append({'code': spec_code, 'name': name, "num": spec_num})
+ 
+    return {"specialties": specs_info}
 
 
 def get_company_preview_info():
     companies = [vac.company.name for vac in Vacancy.objects.all()]
     company_cnt = Counter(companies)
-    company_logos = {}
+    company_info = []
     for company in Company.objects.all():
         num = company_cnt[company.name]
-        if num:
-            company_logos[company.logo] = num
-    return {"companies": company_logos}
+        if not num:
+            continue
+        company_info.append({
+            "name": company.name,
+            "logo": company.logo,
+            "num": num
+        })
+    return {"companies": company_info}
 
 
 def get_all_vacancies_info():
