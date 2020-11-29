@@ -4,6 +4,14 @@ from django.http import Http404
 
 from vacancies.models import Company, Vacancy, Speciality
 
+from data import WEBSITE_TITLE
+
+
+def get_base_context():
+    return {
+            'website_title': WEBSITE_TITLE,
+    }
+
 
 def get_vacancy_preview_info():
     specs = [vac.specialty.title for vac in Vacancy.objects.all()]
@@ -35,14 +43,14 @@ def get_all_vacancies_info():
 
 
 def main_view(request):
-    context_data = {**{},
+    context_data = {**get_base_context(),
                     **get_company_preview_info(),
                     **get_vacancy_preview_info()}
     return render(request, "vacancies/index.html", context=context_data)
 
 
 def company_view(request, company):
-    context_data = {**{},
+    context_data = {**get_base_context(),
                     **get_all_vacancies_info()}
 
     print("Company: ", company)
@@ -66,20 +74,19 @@ def company_view(request, company):
             "salary_max": vac.salary_max,
             "date": vac.published_at,
             "company_logo": vac.company.logo})
-    print("Vacancies: ", len(vacancy_info))
     context_data.update({"vacancies": vacancy_info, "total": len(vacancy_info)})
 
     return render(request, "vacancies/company.html", context=context_data)
 
 
 def vacancies(request):
-    context_data = {**{},
+    context_data = {**get_base_context(),
                     **get_all_vacancies_info()}
     return render(request, "vacancies/vacancies.html", context=context_data)
 
 
 def vacancy_category(request, category):
-    context_data = {}
+    context_data = get_base_context()
 
     speciality = Speciality.objects.get(code=category)
     if speciality is None:
@@ -103,7 +110,7 @@ def vacancy_category(request, category):
 
 
 def vacancy_view(request, id):
-    context_data = {}
+    context_data = get_base_context()
 
     vacancy = Vacancy.objects.get(pk=id)
     if vacancy is None:

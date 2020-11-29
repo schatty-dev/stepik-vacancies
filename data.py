@@ -1,5 +1,7 @@
 """ Вакансии """
 
+WEBSITE_TITLE = "Jumanji 🐵"
+
 jobs = [
 
     {"id": "1", "title": "Разработчик на Python", "specialty": "backend", "company": "3", "salary_min": "100000",
