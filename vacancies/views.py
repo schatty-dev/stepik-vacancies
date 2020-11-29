@@ -21,6 +21,18 @@ def get_company_preview_info():
     return {"companies": company_logos}
 
 
+def get_all_vacancies_info():
+    info = [{
+            "title": vac.title,
+            "specialty": vac.specialty.title,
+            "skills": vac.skills,
+            "salary_min": vac.salary_min,
+            "salary_max": vac.salary_max,
+            "date": vac.published_at,
+            "company_logo": vac.company.logo} for vac in Vacancy.objects.all()]
+    return {"vacancies": info, "total": len(info)}
+
+
 def main_view(request):
     context_data = {**{},
                     **get_company_preview_info(),
@@ -29,12 +41,14 @@ def main_view(request):
 
 
 def company_view(request, company):
-    context_data = {}
+    context_data = {**{},
+                    **get_all_vacancies_info()}
     return render(request, "vacancies/company.html", context=context_data)
 
 
 def vacancies(request):
-    context_data = {}
+    context_data = {**{},
+                    **get_all_vacancies()}
     return render(request, "vacancies/vacancies.html", context=context_data)
 
 
