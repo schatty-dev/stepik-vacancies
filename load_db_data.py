@@ -3,7 +3,6 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'conf.settings')
 import django
 django.setup()
-
 import argparse
 
 from vacancies.models import Speciality, Company, Vacancy
@@ -40,7 +39,7 @@ def fill_db():
             # Prepare valid object with foreign keys
             vacancy = copy(job)
             vacancy["company"] = company
-            vacancy["specialty"] = specialty 
+            vacancy["specialty"] = specialty
             vacancy["text"] = job["description"]
             del vacancy["description"]
             Vacancy.objects.create(**vacancy)
@@ -70,4 +69,3 @@ if __name__ == "__main__":
         clean_db()
     else:
         fill_db()
-

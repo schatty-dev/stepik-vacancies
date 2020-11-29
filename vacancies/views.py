@@ -8,12 +8,14 @@ from data import WEBSITE_TITLE
 
 
 def get_base_context():
+    """Get context that every page uses. """
     return {
             'website_title': WEBSITE_TITLE,
     }
 
 
 def get_vacancy_preview_info():
+    """Get info for previewing positions per specialty for main page. """
     specs = [vac.specialty.code for vac in Vacancy.objects.all()]
     specs_cnt = dict(Counter(specs))
 
@@ -22,11 +24,12 @@ def get_vacancy_preview_info():
         # Assume the object exists (!)
         name = Speciality.objects.get(code=spec_code).title
         specs_info.append({'code': spec_code, 'name': name, "num": spec_num})
- 
+
     return {"specialties": specs_info}
 
 
 def get_company_preview_info():
+    """Get info for previewing positions per company for main page. """
     companies = [vac.company.name for vac in Vacancy.objects.all()]
     company_cnt = Counter(companies)
     company_info = []
@@ -43,6 +46,7 @@ def get_company_preview_info():
 
 
 def get_vacancy_info(vac_obj):
+    """Get dictionary with needed info from query object. """
     return {
             "id": vac_obj.id,
             "title": vac_obj.title,
@@ -57,6 +61,7 @@ def get_vacancy_info(vac_obj):
 
 
 def get_all_vacancies_info():
+    """Context form the 'All Positions' page. """
     info = [get_vacancy_info(vac) for vac in Vacancy.objects.all()]
     return {"vacancies": info, "total": len(info)}
 
@@ -68,19 +73,23 @@ def main_view(request):
     return render(request, "vacancies/index.html", context=context_data)
 
 
+''' ------ Views ------- '''
+
+
 def company_view(request, company):
+    """View for 'Company' page. """
     context_data = {**get_base_context(),
                     **get_all_vacancies_info()}
 
     company = Company.objects.get(name=company)
     if company is None:
         raise Http404("404: Company doesn't exist.")
+
     company_info = {
             "name": company.name,
             "location": company.location,
             "logo": company.logo
     }
-    print("Info: ", company_info)
     context_data.update(company_info)
 
     vacancy_info = [get_vacancy_info(vac)
@@ -91,12 +100,14 @@ def company_view(request, company):
 
 
 def vacancies(request):
+    """View for 'All Positions' page. """
     context_data = {**get_base_context(),
                     **get_all_vacancies_info()}
     return render(request, "vacancies/vacancies.html", context=context_data)
 
 
 def vacancy_category(request, category):
+    """View for 'Positions for Category' """
     context_data = get_base_context()
 
     speciality = Speciality.objects.get(code=category)
@@ -113,12 +124,13 @@ def vacancy_category(request, category):
 
 
 def vacancy_view(request, id):
+    """View for 'Single Position' page. """
     context_data = get_base_context()
 
     vacancy = Vacancy.objects.get(pk=id)
     if vacancy is None:
         raise Http404("404: Position doesn't exist.")
-    
+
     context_data.update(get_vacancy_info(vacancy))
 
     return render(request, "vacancies/vacancy.html", context=context_data)
