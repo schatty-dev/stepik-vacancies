@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from collections import Counter
 
 from django.http import Http404, HttpResponse
@@ -8,14 +9,15 @@ from vacancies.models import Company, Vacancy, Speciality
 from data import WEBSITE_TITLE
 
 
-def get_base_context():
+def get_base_context() -> dict:
     """Get context that every page uses. """
     return {
             'website_title': WEBSITE_TITLE,
     }
 
 
-def get_vacancy_preview_info(vac_objs, spec_objs):
+def get_vacancy_preview_info(vac_objs: Sequence,
+                             spec_objs: Sequence) -> dict:
     """Get info for previewing positions per specialty for main page. """
     specs = [vac.specialty.code for vac in vac_objs]
     specs_cnt = dict(Counter(specs))
@@ -29,13 +31,14 @@ def get_vacancy_preview_info(vac_objs, spec_objs):
     return {"specialties": specs_info}
 
 
-def get_company_preview_info(vac_objs, comp_objs):
+def get_company_preview_info(vac_objs: Sequence,
+                             comp_objs: Sequence) -> dict:
     """Get info for previewing positions per company for main page. """
     companies = [vac.company.name for vac in vac_objs]
     company_cnt = Counter(companies)
     company_info = []
     for company in comp_objs:
-        num = company_cnt[company.name]
+        num = company_cnt.get(company.name)
         if not num:
             continue
         company_info.append({
@@ -79,6 +82,7 @@ class MainView(BaseView):
 
 
 class CompanyView(BaseView):
+    """View for 'Company' page. """
     template_name = "vacancies/company.html"
 
     def get_context_data(self, **kwargs):
@@ -101,6 +105,7 @@ class CompanyView(BaseView):
 
 
 class AllPositionsView(BaseView):
+    """View for 'All Positions' page. """
     template_name = "vacancies/vacancies.html"
 
     def get_context_data(self, **kwargs):
