@@ -1,5 +1,6 @@
 from collections import Counter
 from django.shortcuts import render
+from django.http import Http404
 
 from vacancies.models import Company, Vacancy, Speciality
 
@@ -48,12 +49,31 @@ def company_view(request, company):
 
 def vacancies(request):
     context_data = {**{},
-                    **get_all_vacancies()}
+                    **get_all_vacancies_info()}
     return render(request, "vacancies/vacancies.html", context=context_data)
 
 
 def vacancy_category(request, category):
     context_data = {}
+
+    speciality = Speciality.objects.get(code=category)
+    if speciality is None:
+        raise Http404("404: Category doesn't exist.")
+  
+    vacancy_info = []
+    for vac in Vacancy.objects.all():
+        if vac.specialty == speciality:
+            vacancy_info.append({
+            "title": vac.title,
+            "specialty": vac.specialty.title,
+            "skills": vac.skills,
+            "salary_min": vac.salary_min,
+            "salary_max": vac.salary_max,
+            "date": vac.published_at,
+            "company_logo": vac.company.logo})
+
+    context_data.update({"vacancies": vacancy_info, "spec": speciality.title, "total": len(vacancy_info)})
+
     return render(request, "vacancies/vacancy_category.html", context=context_data)
 
 
