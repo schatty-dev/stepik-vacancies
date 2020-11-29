@@ -46,27 +46,6 @@ def get_company_preview_info():
     return {"companies": company_info}
 
 
-def get_vacancy_info(vac_obj):
-    """Get dictionary with needed info from query object. """
-    return {
-            "id": vac_obj.id,
-            "title": vac_obj.title,
-            "specialty": vac_obj.specialty.title,
-            "skills": vac_obj.skills,
-            "salary_min": vac_obj.salary_min,
-            "salary_max": vac_obj.salary_max,
-            "date": vac_obj.published_at,
-            "company_logo": vac_obj.company.logo,
-            "company_name": vac_obj.company.name
-    }
-
-
-def get_all_vacancies_info():
-    """Context form the 'All Positions' page. """
-    info = [get_vacancy_info(vac) for vac in Vacancy.objects.all()]
-    return {"vacancies": info, "total": len(info)}
-
-
 ''' ------ Views ------- '''
 
 
