@@ -44,6 +44,31 @@ def main_view(request):
 def company_view(request, company):
     context_data = {**{},
                     **get_all_vacancies_info()}
+
+    print("Company: ", company)
+    company = Company.objects.get(name=company)
+    if company is None:
+        raise Http404("404: Company doesn't exist.")
+    company_info = {
+            "name": company.name,
+            "location": company.location,
+            "logo": company.logo
+    }
+    context_data.update(company_info)
+
+    vacancy_info = []
+    for vac in Vacancy.objects.filter(company=company):
+            vacancy_info.append({
+            "title": vac.title,
+            "specialty": vac.specialty.title,
+            "skills": vac.skills,
+            "salary_min": vac.salary_min,
+            "salary_max": vac.salary_max,
+            "date": vac.published_at,
+            "company_logo": vac.company.logo})
+    print("Vacancies: ", len(vacancy_info))
+    context_data.update({"vacancies": vacancy_info, "total": len(vacancy_info)})
+
     return render(request, "vacancies/company.html", context=context_data)
 
 
@@ -82,7 +107,6 @@ def vacancy_view(request, id):
 
     vacancy = Vacancy.objects.get(pk=id)
     if vacancy is None:
-        print("Vacancy is None")
         raise Http404("404: Position doesn't exist.")
     
     vacancy_info = {
