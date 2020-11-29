@@ -22,7 +22,7 @@ import vacancies.views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.main_view),
-    path("company/<str:name>/", views.company_view),
+    path("company/<str:company>/", views.company_view),
     path("vacancies/", views.vacancies),
     path("vacancy/<int:id>/", views.vacancy_view),
     path("vacancy/cat/<str:category>", views.vacancy_category),

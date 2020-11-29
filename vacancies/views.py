@@ -8,7 +8,7 @@ def main_view(request):
     return render(request, "vacancies/index.html", context=context_data)
 
 
-def company_view(request, name):
+def company_view(request, company):
     context_data = {}
     return render(request, "vacancies/company.html", context=context_data)
 
